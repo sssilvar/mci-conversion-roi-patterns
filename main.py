@@ -63,13 +63,14 @@ if __name__ == '__main__':
 
         for train_index, test_index in skf.split(subjects, labels):
             subjects_train, labels_train = subjects[train_index], labels[train_index]
-            subjects_test, labels_test = subjects[train_index], labels[train_index]
+            subjects_test, labels_test = subjects[test_index], labels[test_index]
 
             print(f'Dataset size: {len(subjects)}')
             print(f'Subjects for training: {len(train_index)}')
             print(f'Subjects for testing: {len(test_index)}')
             print(f'Data folder: {data_folder}')
             print(f'Output folder: {out_folder}')
+            print(f'Train intersection test: {set(subjects_train).intersection(set(subjects_test))}')
 
             # Extract ROI
             print(f'{sep} ROI EXTRACTION {sep}')
