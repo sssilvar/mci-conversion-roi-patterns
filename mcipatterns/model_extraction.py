@@ -1,5 +1,6 @@
 #!/bin/env python3
 import os
+from tqdm import tqdm
 from os.path import join, dirname, realpath, isfile
 
 import nibabel as nb
@@ -41,7 +42,7 @@ def extract_roi(subjects, data_folder, out_folder, th_method='otsu'):
     n_stables = n_converters = 0  # Reset counters
     affine = np.eye(4)  # Default affine
 
-    for subject in subjects:
+    for subject in tqdm(subjects, ncols=150, desc='Subjects'):
         # Load subject volume
         mag, angle, affine, label = load_subject_volume(subject_id=subject,
                                                         data_folder=data_folder,
