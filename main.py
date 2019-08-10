@@ -58,7 +58,7 @@ if __name__ == '__main__':
         labels = adnimerge['TARGET'].astype('category')
         print(subjects)
 
-        skf = StratifiedKFold(n_splits=3, random_state=42)
+        skf = StratifiedKFold(n_splits=10, random_state=42)
         plt.figure(figsize=(19.2 * 0.75, 10.8 * 0.75), dpi=150)
 
         for train_index, test_index in skf.split(subjects, labels):
