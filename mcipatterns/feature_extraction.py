@@ -1,5 +1,5 @@
 #!/bin/env python3
-import os
+from tqdm import tqdm
 from os.path import join, isfile, dirname, realpath
 
 import pandas as pd
@@ -12,7 +12,7 @@ def compute_dataset_features(subjects, features_file, data_folder, roi_mask):
     features = pd.DataFrame()
     adnimerge = load_adnimerge()
 
-    for subject_id in subjects:
+    for subject_id in tqdm(subjects, ncols=150, desc='Subjects'):
         grad_file = join(data_folder, subject_id, 'gradients.npz')
         if not isfile(grad_file) or subject_id not in adnimerge.index:
             continue
