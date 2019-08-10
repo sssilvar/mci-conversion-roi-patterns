@@ -3,11 +3,15 @@ import argparse
 from os.path import join, dirname, isfile
 
 from sklearn.model_selection import StratifiedKFold
+import matplotlib.pyplot as plt
 
 from mcipatterns.model_extraction import extract_roi
 from mcipatterns.feature_extraction import compute_dataset_features
 from mcipatterns.adnimerge import filter_adni_conv_time
 from mcipatterns.classification import classify
+
+plt.switch_backend('agg')
+plt.style.use('seaborn')
 
 
 def parse_args():
@@ -53,7 +57,7 @@ if __name__ == '__main__':
         labels = adnimerge['TARGET'].astype('category')
         print(subjects)
 
-        skf = StratifiedKFold(n_splits=3, random_state=42)
+        skf = StratifiedKFold(n_splits=2, random_state=42)
         for train_index, test_index in skf.split(subjects, labels):
             subjects_train, labels_train = subjects[train_index], labels[train_index]
             subjects_test, labels_test = subjects[train_index], labels[train_index]
@@ -74,10 +78,18 @@ if __name__ == '__main__':
             compute_dataset_features(subjects=subjects,
                                      data_folder=data_folder,
                                      roi_mask=roi_mask,
-                                         features_file=features_file)
+                                     features_file=features_file)
             # Perform classification
-            classify(features_file=features_file,
-                     subj_train=subjects_train,
-                     subj_test=subjects_test)
+            metrics, fpr, tpr = classify(features_file=features_file,
+                                         subj_train=subjects_train,
+                                         subj_test=subjects_test)
+
+            plt.figure(figsize=(19.2 * 0.75, 10.8 * 0.75), dpi=150)
+            plt.plot([0, 1], [0, 1], 'k--')
+            plt.plot(fpr, tpr)
+            plt.legend([f'AUC = {metrics["auc"]}'])
+            plt.xlabel('False positive rate')
+            plt.ylabel('True positive rate')
+            plt.title('ROC curve')
             print('Done!')
             print()
