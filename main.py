@@ -64,17 +64,16 @@ if __name__ == '__main__':
             print(f'Data folder: {data_folder}')
             print(f'Output folder: {out_folder}')
 
-            if not isfile(features_file):
-                # Extract ROI
-                print(f'{sep} ROI EXTRACTION {sep}')
-                roi_mask, diff_map = extract_roi(subjects=subjects_train,
-                                                 data_folder=data_folder,
-                                                 out_folder=out_folder)
-                # Compute features
-                print(f'{sep} FEATURE COMPUTING {sep}')
-                compute_dataset_features(subjects=subjects,
-                                         data_folder=data_folder,
-                                         roi_mask=roi_mask,
+            # Extract ROI
+            print(f'{sep} ROI EXTRACTION {sep}')
+            roi_mask, diff_map = extract_roi(subjects=subjects_train,
+                                             data_folder=data_folder,
+                                             out_folder=out_folder)
+            # Compute features
+            print(f'{sep} FEATURE COMPUTING {sep}')
+            compute_dataset_features(subjects=subjects,
+                                     data_folder=data_folder,
+                                     roi_mask=roi_mask,
                                          features_file=features_file)
             # Perform classification
             classify(features_file=features_file,
