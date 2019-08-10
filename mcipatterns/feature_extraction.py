@@ -12,7 +12,7 @@ def compute_dataset_features(subjects, features_file, data_folder, roi_mask):
     features = pd.DataFrame()
     adnimerge = load_adnimerge()
 
-    for subject_id in tqdm(subjects, ncols=150, desc='Subjects'):
+    for subject_id in tqdm(subjects, ncols=150, desc='Subjects', unit='subj'):
         grad_file = join(data_folder, subject_id, 'gradients.npz')
         if not isfile(grad_file) or subject_id not in adnimerge.index:
             continue

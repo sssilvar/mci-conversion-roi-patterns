@@ -42,7 +42,7 @@ def extract_roi(subjects, data_folder, out_folder, th_method='otsu'):
     n_stables = n_converters = 0  # Reset counters
     affine = np.eye(4)  # Default affine
 
-    for subject in tqdm(subjects, ncols=150, desc='Subjects'):
+    for subject in tqdm(subjects, ncols=150, desc='Subjects', unit='subj'):
         # Load subject volume
         mag, angle, affine, label = load_subject_volume(subject_id=subject,
                                                         data_folder=data_folder,
