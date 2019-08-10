@@ -1,6 +1,7 @@
 #!/bin/env python3
+import os
 import argparse
-from os.path import join, dirname, isfile
+from os.path import join, dirname, basename
 
 from sklearn.model_selection import StratifiedKFold
 import matplotlib.pyplot as plt
@@ -53,11 +54,13 @@ if __name__ == '__main__':
 
         # Filter ADNIMERGE
         adnimerge = filter_adni_conv_time(conversion_time=time)
-        subjects = adnimerge.index[:100]
-        labels = adnimerge['TARGET'].astype('category')[:100]
+        subjects = adnimerge.index
+        labels = adnimerge['TARGET'].astype('category')
         print(subjects)
 
-        skf = StratifiedKFold(n_splits=2, random_state=42)
+        skf = StratifiedKFold(n_splits=3, random_state=42)
+        plt.figure(figsize=(19.2 * 0.75, 10.8 * 0.75), dpi=150)
+
         for train_index, test_index in skf.split(subjects, labels):
             subjects_train, labels_train = subjects[train_index], labels[train_index]
             subjects_test, labels_test = subjects[train_index], labels[train_index]
@@ -84,12 +87,19 @@ if __name__ == '__main__':
                                          subj_train=subjects_train,
                                          subj_test=subjects_test)
 
-            plt.figure(figsize=(19.2 * 0.75, 10.8 * 0.75), dpi=150)
-            plt.plot([0, 1], [0, 1], 'k--')
+            # Plot ROC and save it
+            plt.plot([0, 1], [0, 1], 'k--', label=f'AUC = {metrics["auc"]}')
             plt.plot(fpr, tpr)
-            plt.legend([f'AUC = {metrics["auc"]}'])
+            plt.legend()
             plt.xlabel('False positive rate')
             plt.ylabel('True positive rate')
             plt.title('ROC curve')
-            print('Done!')
-            print()
+
+        clf_folder = join(out_folder, 'classification')
+        os.makedirs(clf_folder, exist_ok=True)
+
+        fig_file = basename(features_file).replace('csv', 'png')
+        fig_file = join(clf_folder, fig_file)
+        plt.savefig(fig_file)
+        print('Done!')
+        print()

@@ -11,10 +11,6 @@ from sklearn.metrics import classification_report, roc_auc_score, roc_curve, acc
 
 
 def classify(features_file, subj_train, subj_test):
-    # Define classification folder
-    fig_file = basename(features_file).replace('csv', 'png')
-    out_folder = join(dirname(features_file), 'classification')
-
     # Load and arse data
     df = pd.read_csv(features_file, index_col=0)
     X = df.drop('label', axis='columns')
@@ -48,8 +44,8 @@ def classify(features_file, subj_train, subj_test):
 
     metrics = pd.Series(name='metrics')
     metrics['acc'] = accuracy_score(y_test, y_pred)
-    metrics['pre'] = precision_score(y_test, y_pred)
-    metrics['f1'] = f1_score(y_test, y_pred)
+    metrics['pre'] = precision_score(y_test, y_pred, pos_label='MCIc')
+    metrics['f1'] = f1_score(y_test, y_pred, pos_label='MCIc')
     metrics['auc'] = roc_auc_score(y_test, y_pred_proba)
 
     return metrics, fpr, tpr
