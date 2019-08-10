@@ -58,7 +58,7 @@ if __name__ == '__main__':
         print(subjects)
 
         skf = StratifiedKFold(n_splits=2, random_state=42)
-        for train_index, test_index in skf.split(subjects, labels):
+        for train_index, test_index in skf.split(subjects[:100], labels[:100]):  # TODO: remove 100
             subjects_train, labels_train = subjects[train_index], labels[train_index]
             subjects_test, labels_test = subjects[train_index], labels[train_index]
 
