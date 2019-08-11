@@ -60,6 +60,7 @@ if __name__ == '__main__':
 
         skf = StratifiedKFold(n_splits=10, random_state=42)
         plt.figure(figsize=(19.2 * 0.75, 10.8 * 0.75), dpi=150)
+        plt.plot([0, 1], [0, 1], 'k--', alpha=0.8)
 
         for train_index, test_index in skf.split(subjects, labels):
             subjects_train, labels_train = subjects[train_index], labels[train_index]
@@ -89,18 +90,21 @@ if __name__ == '__main__':
                                          subj_test=subjects_test)
 
             # Plot ROC and save it
-            plt.plot([0, 1], [0, 1], 'k--', label=f'AUC = {metrics["auc"]}')
-            plt.plot(fpr, tpr)
-            plt.legend()
-            plt.xlabel('False positive rate')
-            plt.ylabel('True positive rate')
-            plt.title('ROC curve')
+            plt.plot(fpr, tpr, label=f'AUC = {metrics["auc"]}')
 
+        # Final touches
+        plt.legend()
+        plt.xlabel('False positive rate')
+        plt.ylabel('True positive rate')
+        plt.title('ROC curve')
+
+        # Create folder with classification results
         clf_folder = join(out_folder, 'classification')
         os.makedirs(clf_folder, exist_ok=True)
 
-        fig_file = basename(features_file).replace('csv', 'png')
+        # Save figure to disk
+        fig_file = basename(features_file).replace('csv', 'eps')
         fig_file = join(clf_folder, fig_file)
-        plt.savefig(fig_file)
+        plt.savefig(fig_file, bbox_inches='tight')
         print('Done!')
         print()

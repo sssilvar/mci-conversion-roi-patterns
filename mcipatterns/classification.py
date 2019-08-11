@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, roc_auc_score, roc_curve, accuracy_score, precision_score, f1_score
+from sklearn.metrics import classification_report, auc, roc_curve, accuracy_score, precision_score, f1_score
 
 
 def classify(features_file, subj_train, subj_test):
@@ -25,7 +25,7 @@ def classify(features_file, subj_train, subj_test):
     # Create a pipeline
     pipeline = Pipeline([
         ('scaler', StandardScaler()),
-        ('clf', RandomForestClassifier())
+        ('clf', RandomForestClassifier(n_estimators=100))
     ])
 
     # Train the model
@@ -46,6 +46,6 @@ def classify(features_file, subj_train, subj_test):
     metrics['acc'] = accuracy_score(y_test, y_pred)
     metrics['pre'] = precision_score(y_test, y_pred, pos_label='MCIc')
     metrics['f1'] = f1_score(y_test, y_pred, pos_label='MCIc')
-    metrics['auc'] = roc_auc_score(y_test, y_pred_proba)
+    metrics['auc'] = auc(y_test, y_pred_proba)
 
     return metrics, fpr, tpr
