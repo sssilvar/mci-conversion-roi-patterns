@@ -46,6 +46,6 @@ def classify(features_file, subj_train, subj_test):
     metrics['acc'] = accuracy_score(y_test, y_pred)
     metrics['pre'] = precision_score(y_test, y_pred, pos_label='MCIc')
     metrics['f1'] = f1_score(y_test, y_pred, pos_label='MCIc')
-    metrics['auc'] = auc(y_test, y_pred_proba)
+    metrics['auc'] = auc(fpr, tpr)
 
     return metrics, fpr, tpr
